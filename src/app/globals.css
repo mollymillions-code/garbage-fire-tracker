@@ -1,26 +1,196 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-mono);
+  --color-mc-cyan: #06b6d4;
+  --color-mc-border: rgba(6, 182, 212, 0.2);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  background: #020617;
+  color: #e2e8f0;
+}
+
+/* ========== MISSION CONTROL PANEL SYSTEM ========== */
+
+.mc-panel {
+  position: relative;
+  background: rgba(2, 6, 23, 0.78);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(6, 182, 212, 0.15);
+  border-radius: 4px;
+  transition: border-color 0.3s ease;
+}
+
+.mc-panel:hover {
+  border-color: rgba(6, 182, 212, 0.35);
+}
+
+/* HUD corner brackets */
+.mc-panel::before,
+.mc-panel::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: rgba(6, 182, 212, 0.6);
+  pointer-events: none;
+  z-index: 1;
+}
+.mc-panel::before {
+  top: -1px; left: -1px;
+  border-top: 2px solid;
+  border-left: 2px solid;
+}
+.mc-panel::after {
+  top: -1px; right: -1px;
+  border-top: 2px solid;
+  border-right: 2px solid;
+}
+
+.mc-corners {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+.mc-corners::before,
+.mc-corners::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: rgba(6, 182, 212, 0.6);
+}
+.mc-corners::before {
+  bottom: -1px; left: -1px;
+  border-bottom: 2px solid;
+  border-left: 2px solid;
+}
+.mc-corners::after {
+  bottom: -1px; right: -1px;
+  border-bottom: 2px solid;
+  border-right: 2px solid;
+}
+
+.mc-glow {
+  box-shadow: 0 0 20px -5px rgba(6, 182, 212, 0.12),
+              inset 0 1px 0 0 rgba(6, 182, 212, 0.08);
+}
+
+/* Status indicator dots */
+.mc-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.mc-dot--live { background: #22c55e; box-shadow: 0 0 6px #22c55e; animation: mc-pulse 2s ease-in-out infinite; }
+.mc-dot--warn { background: #f59e0b; box-shadow: 0 0 6px #f59e0b; animation: mc-pulse 1s ease-in-out infinite; }
+.mc-dot--err  { background: #ef4444; box-shadow: 0 0 6px #ef4444; }
+.mc-dot--off  { background: #475569; }
+
+@keyframes mc-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+/* Subtle scanline overlay */
+.mc-scanlines::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.025) 2px,
+    rgba(0, 0, 0, 0.025) 4px
+  );
+}
+
+/* ========== LEAFLET OVERRIDES ========== */
+
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  z-index: 0;
+  background: #0f172a;
+}
+
+.leaflet-popup-content-wrapper {
+  background: rgba(2, 6, 23, 0.95) !important;
+  color: #e2e8f0;
+  border-radius: 4px !important;
+  border: 1px solid rgba(6, 182, 212, 0.25) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(6, 182, 212, 0.08) !important;
+}
+
+.leaflet-popup-tip {
+  background: rgba(2, 6, 23, 0.95) !important;
+}
+
+.leaflet-popup-content {
+  margin: 12px 16px !important;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+}
+
+.leaflet-control-layers {
+  background: rgba(2, 6, 23, 0.9) !important;
+  color: #e2e8f0 !important;
+  border: 1px solid rgba(6, 182, 212, 0.2) !important;
+  border-radius: 4px !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+.leaflet-control-layers-toggle {
+  background-color: rgba(2, 6, 23, 0.9) !important;
+}
+
+.leaflet-control-layers label {
+  color: #e2e8f0 !important;
+}
+
+.leaflet-control-zoom a {
+  background: rgba(2, 6, 23, 0.9) !important;
+  color: #06b6d4 !important;
+  border-color: rgba(6, 182, 212, 0.2) !important;
+}
+
+.leaflet-control-zoom a:hover {
+  background: rgba(6, 182, 212, 0.15) !important;
+}
+
+.leaflet-control-scale-line {
+  border-color: rgba(6, 182, 212, 0.4) !important;
+  color: #06b6d4 !important;
+  background: rgba(2, 6, 23, 0.7) !important;
+  font-family: var(--font-mono), ui-monospace, monospace !important;
+  font-size: 10px !important;
+}
+
+/* ========== FIRE MARKER ANIMATIONS ========== */
+
+.fire-ring {
+  animation: fire-ring-pulse 2s ease-in-out infinite;
+}
+
+.fire-core {
+  animation: fire-core-pulse 2s ease-in-out infinite;
+}
+
+@keyframes fire-ring-pulse {
+  0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.2; transform: translate(-50%, -50%) scale(1.4); }
+}
+
+@keyframes fire-core-pulse {
+  0%, 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.15); }
 }

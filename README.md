@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Garbage Fire Tracker
 
-## Getting Started
+Live fire hotspot monitoring for New Town, Kolkata using free NASA FIRMS NRT feeds and WAQI air quality data.
 
-First, run the development server:
+## Data Sources (Free)
+
+- NASA FIRMS NRT (`VIIRS_SNPP_NRT`, `VIIRS_NOAA20_NRT`, `VIIRS_NOAA21_NRT`, `MODIS_NRT`)
+- WAQI AQI API
+
+## API Keys (Free and Easy)
+
+1. NASA FIRMS map key (free): https://firms.modaps.eosdis.nasa.gov/api/map_key/
+2. WAQI token (free tier): https://aqicn.org/data-platform/token/
+
+Both keys are used only on the server through environment variables.
+
+## Local Setup
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Create your local env file:
+
+```bash
+cp .env.example .env.local
+```
+
+3. Fill in `.env.local`:
+
+```env
+FIRMS_MAP_KEY=your_free_nasa_firms_key
+WAQI_TOKEN=your_free_waqi_token
+```
+
+4. Run dev server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5. Open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```text
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Fire API
 
-## Learn More
+`GET /api/firms`
 
-To learn more about Next.js, take a look at the following resources:
+Query params:
+- `days`: `1-30`
+- `sources`: optional comma-separated FIRMS source list
+- `source`: optional single source override
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Behavior:
+- Merges multiple FIRMS sources
+- Deduplicates overlapping detections
+- Adaptive refresh/cache: 2 to 5 minutes depending on selected range
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Scripts
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `npm run dev` - start local dev server
+- `npm run lint` - run ESLint
+- `npm run build` - production build check
