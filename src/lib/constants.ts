@@ -1,7 +1,8 @@
 export const NEW_TOWN_CENTER: [number, number] = [22.5958, 88.4838];
 export const DEFAULT_ZOOM = 13;
 
-export const FIRMS_BBOX = "88.35,22.45,88.65,22.75";
+// New Town / Rajarhat area with small buffer (~8km x 7km)
+export const FIRMS_BBOX = "88.42,22.56,88.53,22.64";
 
 export const FIRMS_SOURCES = [
   "VIIRS_SNPP_NRT",
